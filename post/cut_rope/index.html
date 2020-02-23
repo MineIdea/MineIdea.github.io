@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>归档 | LT&#39;s Blog</title>
+  <title>剪绳子 | LT&#39;s Blog</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://MineIdea.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://MineIdea.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="归档 | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="剪绳子 | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://MineIdea.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="剪绳子"/>
+    <meta property="og:url" content="https://MineIdea.github.io/post/cut_rope/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="LT&#39;s Blog"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -73,39 +78,65 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">Archives</h1>
+          	<span class="tags">
+          	 
+        </span>
+            <h1>剪绳子</h1>
+            <span class="meta">
+            	Posted on
+              2020-02-23，2 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
   <!-- Post Content -->
   <article>
     <div class="container">
       <div class="row">
-        
-      
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-archives">
-    <h2 class="year">2020</h2>
-    
-                
-        <a href="https://MineIdea.github.io/post/cut_rope/" class="post">
-          <h2 class="post-title Archives">
-            剪绳子
-          </h2>
-          <div class="time post-meta">2020-02-23</div>
-        </a>
-  
-                    
+          <h2 id="题目描述">题目描述</h2>
+<p>给你一根长度为n的绳子，请把绳子剪成整数长的m段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
+<h2 id="输入描述">输入描述:</h2>
+<pre><code>输入一个数n，意义见题面。（2 &lt;= n &lt;= 60）
+</code></pre>
+<h2 id="输出描述">输出描述:</h2>
+<pre><code>输出答案。
+</code></pre>
+<p>示例1</p>
+<h2 id="输入">输入</h2>
+<pre><code>8
+</code></pre>
+<h2 id="输出">输出</h2>
+<pre><code>18
+</code></pre>
+<p>我看到题目的第一想法就是递归，首先考虑一下特殊情况，当n=1、2、3时，最大乘积分别为1,1,2<br>
+n=4也是特殊情况，可以分成2*2，最大乘积为4。n&gt;4时，将绳子分割一定大于本身长度，简单证明一下:</p>
+<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>∗</mo><mo>(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo>)</mo><mo>−</mo><mi>n</mi><mo>=</mo><mi>n</mi><mo>−</mo><mn>4</mn><mo>&gt;</mo><mn>0</mn><mo>(</mo><mi>n</mi><mo>&gt;</mo><mn>4</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">2*(n-2) - n = n-4 &gt; 0 (n&gt;4)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mclose">)</span></span></span></span></span></p>
+<p>因此n&gt;4之后都需要将绳子分成若干个2和3的长度，只需要比较是2 * cutRope(n-2)大，还是3 * cutRope(n-3)大。</p>
+<p>但要注意一点，我们在绳子长度大于3时，要阻止程序对绳子长度为2、3进行进一步分割，使用Math.max就可以让绳子在长度为2、3时停止分割。</p>
+<pre><code class="language-java">import java.lang.Math;
+public class Solution {
+    public int cutRope(int target) {
+        if (target &lt; 4) {
+            return target - 1;
+        }
+        return Math.max(2*Math.max(target-2,cutRope(target-2)),
+                                  3*Math.max(target-3,cutRope(target-3)));
+    }
+}
+</code></pre>
+
+          
+        <div class="comment">
+          
         </div>
-        </div>
-        
       </div>
     </div>
   </article>
-
-
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -177,3 +208,4 @@
   })(this));</script>
   </body>
 </html>
+
