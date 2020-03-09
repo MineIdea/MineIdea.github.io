@@ -1,22 +1,105 @@
-<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://MineIdea.github.io</id>
-    <title>LT&apos;s Blog</title>
-    <updated>2020-03-09T05:57:25.754Z</updated>
-    <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://MineIdea.github.io"/>
-    <link rel="self" href="https://MineIdea.github.io/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
-    <logo>https://MineIdea.github.io/images/avatar.png</logo>
-    <icon>https://MineIdea.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2020, LT&apos;s Blog</rights>
-    <entry>
-        <title type="html"><![CDATA[turtlebot添加laser]]></title>
-        <id>https://MineIdea.github.io/post/turtlebot-tian-jia-laser/</id>
-        <link href="https://MineIdea.github.io/post/turtlebot-tian-jia-laser/">
-        </link>
-        <updated>2020-03-09T05:53:40.000Z</updated>
-        <content type="html"><![CDATA[<pre><code>系统信息: ros-melodic    ubuntu18.04
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta name="referrer" content="never">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="kveln">
+  <title>turtlebot添加laser | LT&#39;s Blog</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://MineIdea.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!--  <link href="https://MineIdea.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
+  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link rel="alternate" type="application/rss+xml" title="turtlebot添加laser | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+  <link href="https://MineIdea.github.io/styles/main.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/jquery.min.js"></script> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+    <meta property="og:description" content="turtlebot添加laser"/>
+    <meta property="og:url" content="https://MineIdea.github.io/post/turtlebot-tian-jia-laser/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="LT&#39;s Blog"/>
+  </head>
+  <body>
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="https://MineIdea.github.io">LT&#39;s Blog</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/">首页</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/archives">归档</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/tags">标签</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/post/about">关于</a>
+              
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://MineIdea.github.io/media/images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://MineIdea.github.io/tag/ros/" class="tag">ros</a>
+            
+        </span>
+            <h1>turtlebot添加laser</h1>
+            <span class="meta">
+            	Posted on
+              2020-03-09，7 min read
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <pre><code>系统信息: ros-melodic    ubuntu18.04
 </code></pre>
 <p>在github上直接下载的turtlebot自带了kinect，并且可以使用depthimage_to_laserscan将深度信息转化为雷达信息，因此，如果添加雷达并不是必须的。我只是尝试增加雷达传感器来加深自己对机器人模型的理解。</p>
 <p>1.保证你已经下载了必须的turtlebot包。</p>
@@ -159,46 +242,91 @@
 </code></pre>
 <p>将global options的Fixed Frame从map改为其他</p>
 <p>把LaserScan订阅的节点改为/turtlebot/laser/scan，可以看到由深度图形转换的雷达信息没有本身雷达得到的信息丰富，也算是对的起我们的一番折腾了。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[剪绳子]]></title>
-        <id>https://MineIdea.github.io/post/cut_rope/</id>
-        <link href="https://MineIdea.github.io/post/cut_rope/">
-        </link>
-        <updated>2020-02-23T15:02:18.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="题目描述">题目描述</h2>
-<p>给你一根长度为n的绳子，请把绳子剪成整数长的m段（m、n都是整数，n&gt;1并且m&gt;1），每段绳子的长度记为k[0],k[1],...,k[m]。请问k[0]xk[1]x...xk[m]可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。</p>
-<h2 id="输入描述">输入描述:</h2>
-<pre><code>输入一个数n，意义见题面。（2 &lt;= n &lt;= 60）
-</code></pre>
-<h2 id="输出描述">输出描述:</h2>
-<pre><code>输出答案。
-</code></pre>
-<p>示例1</p>
-<h2 id="输入">输入</h2>
-<pre><code>8
-</code></pre>
-<h2 id="输出">输出</h2>
-<pre><code>18
-</code></pre>
-<p>我看到题目的第一想法就是递归，首先考虑一下特殊情况，当n=1、2、3时，最大乘积分别为1,1,2<br>
-n=4也是特殊情况，可以分成2*2，最大乘积为4。n&gt;4时，将绳子分割一定大于本身长度，简单证明一下:</p>
-<p class='katex-block'><span class="katex-display"><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>∗</mo><mo>(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo>)</mo><mo>−</mo><mi>n</mi><mo>=</mo><mi>n</mi><mo>−</mo><mn>4</mn><mo>&gt;</mo><mn>0</mn><mo>(</mo><mi>n</mi><mo>&gt;</mo><mn>4</mn><mo>)</mo></mrow><annotation encoding="application/x-tex">2*(n-2) - n = n-4 &gt; 0 (n&gt;4)
-</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.43056em;vertical-align:0em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.66666em;vertical-align:-0.08333em;"></span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68354em;vertical-align:-0.0391em;"></span><span class="mord">4</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">0</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">&gt;</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">4</span><span class="mclose">)</span></span></span></span></span></p>
-<p>因此n&gt;4之后都需要将绳子分成若干个2和3的长度，只需要比较是2 * cutRope(n-2)大，还是3 * cutRope(n-3)大。</p>
-<p>但要注意一点，我们在绳子长度大于3时，要阻止程序对绳子长度为2、3进行进一步分割，使用Math.max就可以让绳子在长度为2、3时停止分割。</p>
-<pre><code class="language-java">import java.lang.Math;
-public class Solution {
-    public int cutRope(int target) {
-        if (target &lt; 4) {
-            return target - 1;
-        }
-        return Math.max(2*Math.max(target-2,cutRope(target-2)),
-                                  3*Math.max(target-3,cutRope(target-3)));
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://MineIdea.github.io/post/cut_rope/">
+              <span class="post-title">
+                剪绳子&rarr;
+              </span>
+            </a>
+          </p>
+        
+        <div class="comment">
+          
+        </div>
+      </div>
+    </div>
+  </article>
+ <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <li class="list-inline-item">
+              <a href="https://MineIdea.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>LT&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
     }
-}
-</code></pre>
-]]></content>
-    </entry>
-</feed>
+  })(this));</script>
+  </body>
+</html>
+
