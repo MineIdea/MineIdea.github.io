@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta name="referrer" content="never">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta name="author" content="kveln">
+  <title>turtlebot与gazebo仿真问题 | LT&#39;s Blog</title>
+  <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <!-- <link href="https://MineIdea.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
+  <!--  <link href="https://MineIdea.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
+  <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link rel="alternate" type="application/rss+xml" title="turtlebot与gazebo仿真问题 | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
+  <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
+  <link href="https://MineIdea.github.io/styles/main.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/highlight.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/jquery.min.js"></script> -->
+  <script>hljs.initHighlightingOnLoad();</script>
+  
+
+    <meta property="og:description" content="turtlebot与gazebo仿真问题"/>
+    <meta property="og:url" content="https://MineIdea.github.io/post/turtlebot-yu-gazebo-fang-zhen-wen-ti/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="LT&#39;s Blog"/>
+  </head>
+  <body>
+  	<!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="https://MineIdea.github.io">LT&#39;s Blog</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/">首页</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/archives">归档</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/tags">标签</a>
+              
+          </li>
+          
+          <li class="nav-item">
+              
+              <a class="nav-link" href="/post/about">关于</a>
+              
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Header -->
+  <header class="masthead" style="background-image: url('https://MineIdea.github.io/media/images/home-bg.jpg')">
+    <div class="overlay"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <div class="post-heading">
+          	<span class="tags">
+          	 
+            <a href="https://MineIdea.github.io/tag/ros/" class="tag">ros</a>
+            
+        </span>
+            <h1>turtlebot与gazebo仿真问题</h1>
+            <span class="meta">
+            	Posted on
+              2020-04-03，5 min read
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Post Content -->
+  <article>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <p>学艺不精，使用turtlebot进行仿真时发现无论如何如何在gazebo都不能运行，我尝试使用mbot和turtlebot3进行gazebo仿真都很顺利，但这使用卡在我心上，在又学了一段时间ros后，我又回头来解决这个问题。</p>
+<p>turtlebot不能在gazebo运行的关键原因就在于他的底盘是kobuki，因此我们会安装kobuki的相关资源，这些完成之后应该能操作现实的机器人，但要turtlebot与gazebo交互还差了一个模块：kobuki_gazebo</p>
+<h3 id="查找控制插件">查找控制插件</h3>
+<p>首先，我们要清楚ros和gazebo是独立的，ros和gazebo交互需要通过gazebo提供的plugin，在turtlebot和mbot中都有以下的plugin</p>
+<pre><code>        &lt;!-- controller --&gt;
+        &lt;gazebo&gt;
+            &lt;plugin name=&quot;differential_drive_controller&quot; 
+                    filename=&quot;libgazebo_ros_diff_drive.so&quot;&gt;
+                &lt;rosDebugLevel&gt;WARN&lt;/rosDebugLevel&gt;
+                &lt;publishWheelTF&gt;true&lt;/publishWheelTF&gt;
+                &lt;robotNamespace&gt;/&lt;/robotNamespace&gt;
+                &lt;publishTf&gt;1&lt;/publishTf&gt;
+		&lt;publishOdomTF&gt;1&lt;/publishOdomTF&gt;
+		&lt;odometrySource&gt;world&lt;/odometrySource&gt; &lt;!-- 'encoder' instead of 'world' is also possible --&gt;
+                &lt;publishWheelJointState&gt;true&lt;/publishWheelJointState&gt;
+                &lt;alwaysOn&gt;true&lt;/alwaysOn&gt;
+                &lt;updateRate&gt;100.0&lt;/updateRate&gt;
+                &lt;legacyMode&gt;true&lt;/legacyMode&gt;
+                &lt;leftJoint&gt;left_wheel_joint&lt;/leftJoint&gt;
+                &lt;rightJoint&gt;right_wheel_joint&lt;/rightJoint&gt;
+                &lt;wheelSeparation&gt;${wheel_joint_y*2}&lt;/wheelSeparation&gt;
+                &lt;wheelDiameter&gt;${2*wheel_radius}&lt;/wheelDiameter&gt;
+                &lt;broadcastTF&gt;1&lt;/broadcastTF&gt;
+                &lt;wheelTorque&gt;30&lt;/wheelTorque&gt;
+                &lt;wheelAcceleration&gt;1.8&lt;/wheelAcceleration&gt;
+                &lt;commandTopic&gt;cmd_vel&lt;/commandTopic&gt;
+                &lt;odometryFrame&gt;odom&lt;/odometryFrame&gt; 
+                &lt;odometryTopic&gt;odom&lt;/odometryTopic&gt; 
+                &lt;robotBaseFrame&gt;base_footprint&lt;/robotBaseFrame&gt;
+            &lt;/plugin&gt;
+</code></pre>
+<p>看到注释，我们也清楚这就是controller的功能，他所需要的库为libgazebo_ros_diff_drive.so，这是我们安装ros-full时就存在的，这插件也是控制ros的命令能够让gazebo反馈出来。</p>
+<p>接下来我们分析turtlebot</p>
+<p>在turtlebot_description/robots/kobuki_hexagons_kinect.urdf.xacro中</p>
+<pre><code>  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/turtlebot_common_library.urdf.xacro&quot; /&gt;
+  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/kobuki.urdf.xacro&quot; /&gt;
+  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/stacks/hexagons.urdf.xacro&quot;/&gt;
+  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/sensors/kinect.urdf.xacro&quot;/&gt;
+</code></pre>
+<p>引入了4个xacro文件，其中引入了kobuki.urdf.xacro</p>
+<p>在kobuki_description/urdf/kobuki.urdf.xacro中引入了</p>
+<pre><code>  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/common_properties.urdf.xacro&quot;/&gt;
+  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/kobuki_gazebo.urdf.xacro&quot;/&gt;
+</code></pre>
+<p>其中kobuki_gazebo就是与gazebo交互的配置文件</p>
+<p>我们找到他的controller</p>
+<pre><code>	  &lt;gazebo&gt;
+	    &lt;plugin name=&quot;kobuki_controller&quot; filename=&quot;libgazebo_ros_kobuki.so&quot;&gt;
+	      &lt;publish_tf&gt;1&lt;/publish_tf&gt;
+	      &lt;left_wheel_joint_name&gt;wheel_left_joint&lt;/left_wheel_joint_name&gt;
+	      &lt;right_wheel_joint_name&gt;wheel_right_joint&lt;/right_wheel_joint_name&gt;
+	      &lt;wheel_separation&gt;.230&lt;/wheel_separation&gt;
+	      &lt;wheel_diameter&gt;0.070&lt;/wheel_diameter&gt;
+	      &lt;torque&gt;1.0&lt;/torque&gt;
+	      &lt;velocity_command_timeout&gt;0.6&lt;/velocity_command_timeout&gt;
+	      &lt;cliff_sensor_left_name&gt;cliff_sensor_left&lt;/cliff_sensor_left_name&gt;
+	      &lt;cliff_sensor_center_name&gt;cliff_sensor_front&lt;/cliff_sensor_center_name&gt;
+	      &lt;cliff_sensor_right_name&gt;cliff_sensor_right&lt;/cliff_sensor_right_name&gt;
+	      &lt;cliff_detection_threshold&gt;0.04&lt;/cliff_detection_threshold&gt;
+	      &lt;bumper_name&gt;bumpers&lt;/bumper_name&gt;
+       	      &lt;imu_name&gt;imu&lt;/imu_name&gt;
+	    &lt;/plugin&gt;
+	  &lt;/gazebo&gt;
+</code></pre>
+<p>发现与turtlebot3不同，他的controller使用的插件为libgazebo_ros_robuki.so</p>
+<h3 id="安装kobuki_gazebo插件">安装kobuki_gazebo插件</h3>
+<p>找到kobuki_gazebo的plugin位置，我一开始以为是插件配置失败，又尝试了很多无用功。我突然想到定位这些库的位置，然后发现</p>
+<pre><code>locate libgazebo_ros_kobuki.so
+</code></pre>
+<p>竟然为空！！！现在结果已经很明确了，因为缺少必要的库，所以无法正常控制turtlebot_gazebo</p>
+<p>在搜索之后，我发现kobuki_gazebo的github为</p>
+<pre><code>https://github.com/yujinrobot/kobuki_desktop
+</code></pre>
+<p>下载完并编译成功，我在自己的catkin_ws下找到了 libgazebo_ros_kobuki.so</p>
+<p>至此</p>
+<pre><code>roslaunch turtlebot_gazebo turtlebot_world.launch
+
+rostopic pub -1 /mobile_base/commands/velocity geometry_msgs/Twist -- '[0.5,0,0]' '[0,0,0]'
+</code></pre>
+<p>已经可以让turtlebot在gazebo中运动起来</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://MineIdea.github.io/post/mbot-tian-jia-bumper/">
+              <span class="post-title">
+                mbot添加bumper&rarr;
+              </span>
+            </a>
+          </p>
+        
+        <div class="comment">
+          
+        </div>
+      </div>
+    </div>
+  </article>
+ <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-md-10 mx-auto">
+          <ul class="list-inline text-center">
+            
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+            
+              
+              <li class="list-inline-item">
+              <a href="https://MineIdea.github.io/atom.xml" target="_blank">
+                <span class="fa-stack fa-lg">
+                  <i class="fas fa-circle fa-stack-2x"></i>
+                  <i class="fas fa-rss fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
+              </li>
+          </ul>
+          <p class="copyright text-muted">Copyright &copy;<span>LT&#39;s Blog</span><br><a href="https://github.com/getgridea/gridea" class="Themeinfo">Powered by Gridea</a></p>
+        </div>
+      </div>
+    </div>
+   </footer>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/bootstrap.bundle.min.js"></script> -->
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/gh/Alanrk/clean-cdn@1.0/scripts/clean-blog.min.js"></script>
+  <!-- <script src="https://MineIdea.github.io/media/scripts/clean-blog.min.js"></script> -->
+  <script src="//instant.page/3.0.0" type="module" defer integrity="sha384-OeDn4XE77tdHo8pGtE1apMPmAipjoxUQ++eeJa6EtJCfHlvijigWiJpD7VDPWXV1"></script>
+  <style type="text/css">a.back_to_top{text-decoration:none;position:fixed;bottom:40px;right:30px;background:#f0f0f0;height:40px;width:40px;border-radius:50%;line-height:36px;font-size:18px;text-align:center;transition-duration:.5s;transition-propety:background-color;display:none}a.back_to_top span{color:#888}a.back_to_top:hover{cursor:pointer;background:#dfdfdf}a.back_to_top:hover span{color:#555}@media print,screen and(max-width:580px){.back_to_top{display:none!important}}</style>
+<a id="back_to_top" href="#" class="back_to_top">
+  <span>▲</span></a>
+<script>$(document).ready((function(_this) {
+    return function() {
+      var bt;
+      bt = $('#back_to_top');
+      if ($(document).width() > 480) {
+        $(window).scroll(function() {
+          var st;
+          st = $(window).scrollTop();
+          if (st > 30) {
+            return bt.css('display', 'block')
+          } else {
+            return bt.css('display', 'none')
+          }
+        });
+        return bt.click(function() {
+          $('body,html').animate({
+            scrollTop: 0
+          },
+          800);
+          return false
+        })
+      }
+    }
+  })(this));</script>
+  </body>
+</html>
+

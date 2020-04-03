@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-       <meta http-equiv="content-type" content="text/html; charset=utf-8">
+      <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta content="yes" name="apple-mobile-web-app-capable" />
   <meta content="black" name="apple-mobile-web-app-status-bar-style" />
@@ -9,14 +9,14 @@
   <meta name="keywords" content="">
   <meta name="description" content="">
   <meta name="author" content="kveln">
-  <title>归档 | LT&#39;s Blog</title>
+  <title>mbot添加bumper | LT&#39;s Blog</title>
   <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
   <!-- <link href="https://MineIdea.github.io/media/css/bootstrap.min.css" rel="stylesheet"> -->
   <!--  <link href="https://MineIdea.github.io/media/css/all.min.css" rel="stylesheet" type="text/css"> -->
   <link href="https://cdn.bootcss.com/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-  <link rel="alternate" type="application/rss+xml" title="归档 | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
+  <link rel="alternate" type="application/rss+xml" title="mbot添加bumper | LT&#39;s Blog » Feed" href="https://MineIdea.github.io/atom.xml">
   <link rel="stylesheet"href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.15.10/build/styles/androidstudio.min.css">
   <link href="https://MineIdea.github.io/styles/main.css" rel="stylesheet">
   <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
@@ -25,6 +25,11 @@
   <script>hljs.initHighlightingOnLoad();</script>
   
 
+    <meta property="og:description" content="mbot添加bumper"/>
+    <meta property="og:url" content="https://MineIdea.github.io/post/mbot-tian-jia-bumper/"/>
+    <meta property="og:locale" content="zh-CN"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:site_name" content="LT&#39;s Blog"/>
   </head>
   <body>
   	<!-- Navigation -->
@@ -73,66 +78,131 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="post-heading">
-            <h1 class="tag-tl">Archives</h1>
+          	<span class="tags">
+          	 
+            <a href="https://MineIdea.github.io/tag/ros/" class="tag">ros</a>
+            
+        </span>
+            <h1>mbot添加bumper</h1>
+            <span class="meta">
+            	Posted on
+              2020-04-03，5 min read
+            </span>
           </div>
         </div>
       </div>
     </div>
   </header>
+
   <!-- Post Content -->
   <article>
     <div class="container">
       <div class="row">
-        
-      
         <div class="col-lg-8 col-md-10 mx-auto">
-          <div class="post-archives">
-    <h2 class="year">2020</h2>
-    
-                
-        <a href="https://MineIdea.github.io/post/turtlebot-yu-gazebo-fang-zhen-wen-ti/" class="post">
-          <h2 class="post-title Archives">
-            turtlebot与gazebo仿真问题
-          </h2>
-          <div class="time post-meta">2020-04-03</div>
-        </a>
-  
-                    
-                
-        <a href="https://MineIdea.github.io/post/mbot-tian-jia-bumper/" class="post">
-          <h2 class="post-title Archives">
-            mbot添加bumper
-          </h2>
-          <div class="time post-meta">2020-04-03</div>
-        </a>
-  
-                    
-                
-        <a href="https://MineIdea.github.io/post/turtlebot-tian-jia-laser/" class="post">
-          <h2 class="post-title Archives">
-            turtlebot添加laser
-          </h2>
-          <div class="time post-meta">2020-03-09</div>
-        </a>
-  
-                    
-                
-        <a href="https://MineIdea.github.io/post/cut_rope/" class="post">
-          <h2 class="post-title Archives">
-            剪绳子
-          </h2>
-          <div class="time post-meta">2020-02-23</div>
-        </a>
-  
-                    
-        </div>
-        </div>
+          <p>这里的mbot使用的是古月居课程中创建的mbot，本来也可以用雷达检测碰撞，但是延迟问题我没搞定，看到可以添加bumper来进行碰撞检测，没想到又是一个大坑。</p>
+<p>我的问题是 添加了bumper后，即使机器人已经碰撞，但bumper并未输出碰撞信息，我在gazebo answer找到了相似的问题，但由于是Gazebo 7，而我的环境是Gazebo9，添加_collision已经不起作用，只能通过生成sdf来查看base_link的collison name。</p>
+<p>以下为对我有帮助的网页连接：</p>
+<p>[]: https://answers.ros.org/question/246448/getting-contact-sensorbumper-gazebo-plugin-to-work/<br>
+[]: https://answers.gazebosim.org//question/15095/gazebo-contact-sensor-added-to-a-robot-link-in-urdf-file-is-not-working-as-expected/<br>
+[]: https://blog.csdn.net/wubaobao1993/article/details/91890839</p>
+<p>之后是我的整个操作流程。</p>
+<p>操作都是在mbot_description/urdf/xacro/gazebo目录下进行</p>
+<figure data-type="image" tabindex="1"><img src="https://MineIdea.github.io/post-images/1585903884200.jpg" alt="" loading="lazy"></figure>
+<p>这里我创建一个mbot_with_bumper_gazebo.xacro来测试bumper能否正常使用。</p>
+<p>全部代码为</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;robot name=&quot;arm&quot; xmlns:xacro=&quot;http://www.ros.org/wiki/xacro&quot;&gt;
+    &lt;xacro:include filename=&quot;$(find mbot_description)/urdf/xacro/gazebo/mbot_base_gazebo.xacro&quot; /&gt;
+	
+  &lt;!-- bumper --&gt;
+ 
+  &lt;joint name=&quot;bumper_joint&quot; type=&quot;fixed&quot;&gt;
+    &lt;axis xyz=&quot;0 1 0&quot; /&gt;
+    &lt;origin xyz=&quot;0.05 0 0.02&quot; rpy=&quot;0 0 0&quot;/&gt;
+    &lt;parent link=&quot;base_link&quot;/&gt;
+    &lt;child link=&quot;bump_sensor&quot;/&gt;
+  &lt;/joint&gt;
+ 
+  &lt;link name=&quot;bump_sensor&quot;&gt;
+    &lt;collision name=&quot;bump_sensor_collision&quot;&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;geometry&gt;
+        &lt;box size=&quot;0.05 0.05 0.05&quot;/&gt;
+      &lt;/geometry&gt;
+    &lt;/collision&gt;
+ 
+    &lt;visual&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;geometry&gt;
+         &lt;box size=&quot;0.05 0.05 0.05&quot;/&gt;
+      &lt;/geometry&gt;
+    &lt;/visual&gt;
+ 
+    &lt;inertial&gt;
+      &lt;mass value=&quot;1e-5&quot; /&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;inertia ixx=&quot;1e-6&quot; ixy=&quot;0&quot; ixz=&quot;0&quot; iyy=&quot;1e-6&quot; iyz=&quot;0&quot; izz=&quot;1e-6&quot; /&gt;
+    &lt;/inertial&gt;
+  &lt;/link&gt;
+ 
+    &lt;gazebo reference=&quot;bump_sensor&quot;&gt;
+    &lt;sensor name=&quot;main_bumper&quot; type=&quot;contact&quot;&gt;
+        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+	  &lt;plugin name=&quot;gazebo_ros_bumper_controller&quot; filename=&quot;libgazebo_ros_bumper.so&quot;&gt;
+	    &lt;alwaysOn&gt;true&lt;/alwaysOn&gt;
+	    &lt;updateRate&gt;50&lt;/updateRate&gt;
+	    &lt;bumperTopicName&gt;bumper_vals&lt;/bumperTopicName&gt;
+	    &lt;frameName&gt;world&lt;/frameName&gt;
+	  &lt;/plugin&gt;
+    &lt;/sensor&gt;
+    &lt;/gazebo&gt;
+
+    &lt;mbot_base_gazebo/&gt;
+&lt;/robot&gt;
+</code></pre>
+<p>我们在mbot_base_gazebo.xacro中定义了基本的mbot，这里只需要导入并添加bumper即可。</p>
+<p>但此时bumper并不一定能正常工作，原因就是</p>
+<pre><code>        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+</code></pre>
+<p>collison要关联机器人正确的名称，这里我已经通过生成sdf来找到正确名称了。</p>
+<p>接下来是找到名称的步骤：</p>
+<ol>
+<li>rosrun xacro xacro.py -o robot.urdf robot.xacro  //这里的robot.xacro为你的模型名称，在我们这里是mbot_with_bumper_gazebo.xacro</li>
+<li>gz sdf -p robot.urdf  &gt; robot.sdf</li>
+</ol>
+<p>此时目录下已经有robot.sdf文件，我们打开在其中搜索base_link，因为一般机器人主体我们都用base_link来声明。</p>
+<figure data-type="image" tabindex="2"><img src="https://MineIdea.github.io/post-images/1585903817019.jpg" alt="" loading="lazy"></figure>
+<p>可以看到name是一个自动生成的名称，将name复制输入到collision当中</p>
+<pre><code>        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+</code></pre>
+<p>我们打开mbot launch文件</p>
+<ol>
+<li>rostopic pub -1  /cmd_vel geometry_msgs/Twist -- '[0.1,0,0]' '[0,0,0]'  //让机器人运动起来</li>
+<li>rostopic echo -n 1 bumper_vals</li>
+</ol>
+<p>我们已经可以看到有碰撞信息。</p>
+
+          
+          <p class="next-post">下一篇：
+            <a href="https://MineIdea.github.io/post/turtlebot-tian-jia-laser/">
+              <span class="post-title">
+                turtlebot添加laser&rarr;
+              </span>
+            </a>
+          </p>
         
+        <div class="comment">
+          
+        </div>
       </div>
     </div>
   </article>
-
-
  <!-- Footer -->
   <footer>
     <div class="container">
@@ -204,3 +274,4 @@
   })(this));</script>
   </body>
 </html>
+

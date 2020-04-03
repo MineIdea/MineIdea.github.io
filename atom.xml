@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://MineIdea.github.io</id>
     <title>LT&apos;s Blog</title>
-    <updated>2020-03-09T05:57:25.754Z</updated>
+    <updated>2020-04-03T08:54:15.307Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://MineIdea.github.io"/>
     <link rel="self" href="https://MineIdea.github.io/atom.xml"/>
@@ -10,6 +10,190 @@
     <logo>https://MineIdea.github.io/images/avatar.png</logo>
     <icon>https://MineIdea.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, LT&apos;s Blog</rights>
+    <entry>
+        <title type="html"><![CDATA[turtlebot与gazebo仿真问题]]></title>
+        <id>https://MineIdea.github.io/post/turtlebot-yu-gazebo-fang-zhen-wen-ti/</id>
+        <link href="https://MineIdea.github.io/post/turtlebot-yu-gazebo-fang-zhen-wen-ti/">
+        </link>
+        <updated>2020-04-03T08:52:42.000Z</updated>
+        <content type="html"><![CDATA[<p>学艺不精，使用turtlebot进行仿真时发现无论如何如何在gazebo都不能运行，我尝试使用mbot和turtlebot3进行gazebo仿真都很顺利，但这使用卡在我心上，在又学了一段时间ros后，我又回头来解决这个问题。</p>
+<p>turtlebot不能在gazebo运行的关键原因就在于他的底盘是kobuki，因此我们会安装kobuki的相关资源，这些完成之后应该能操作现实的机器人，但要turtlebot与gazebo交互还差了一个模块：kobuki_gazebo</p>
+<h3 id="查找控制插件">查找控制插件</h3>
+<p>首先，我们要清楚ros和gazebo是独立的，ros和gazebo交互需要通过gazebo提供的plugin，在turtlebot和mbot中都有以下的plugin</p>
+<pre><code>        &lt;!-- controller --&gt;
+        &lt;gazebo&gt;
+            &lt;plugin name=&quot;differential_drive_controller&quot; 
+                    filename=&quot;libgazebo_ros_diff_drive.so&quot;&gt;
+                &lt;rosDebugLevel&gt;WARN&lt;/rosDebugLevel&gt;
+                &lt;publishWheelTF&gt;true&lt;/publishWheelTF&gt;
+                &lt;robotNamespace&gt;/&lt;/robotNamespace&gt;
+                &lt;publishTf&gt;1&lt;/publishTf&gt;
+		&lt;publishOdomTF&gt;1&lt;/publishOdomTF&gt;
+		&lt;odometrySource&gt;world&lt;/odometrySource&gt; &lt;!-- 'encoder' instead of 'world' is also possible --&gt;
+                &lt;publishWheelJointState&gt;true&lt;/publishWheelJointState&gt;
+                &lt;alwaysOn&gt;true&lt;/alwaysOn&gt;
+                &lt;updateRate&gt;100.0&lt;/updateRate&gt;
+                &lt;legacyMode&gt;true&lt;/legacyMode&gt;
+                &lt;leftJoint&gt;left_wheel_joint&lt;/leftJoint&gt;
+                &lt;rightJoint&gt;right_wheel_joint&lt;/rightJoint&gt;
+                &lt;wheelSeparation&gt;${wheel_joint_y*2}&lt;/wheelSeparation&gt;
+                &lt;wheelDiameter&gt;${2*wheel_radius}&lt;/wheelDiameter&gt;
+                &lt;broadcastTF&gt;1&lt;/broadcastTF&gt;
+                &lt;wheelTorque&gt;30&lt;/wheelTorque&gt;
+                &lt;wheelAcceleration&gt;1.8&lt;/wheelAcceleration&gt;
+                &lt;commandTopic&gt;cmd_vel&lt;/commandTopic&gt;
+                &lt;odometryFrame&gt;odom&lt;/odometryFrame&gt; 
+                &lt;odometryTopic&gt;odom&lt;/odometryTopic&gt; 
+                &lt;robotBaseFrame&gt;base_footprint&lt;/robotBaseFrame&gt;
+            &lt;/plugin&gt;
+</code></pre>
+<p>看到注释，我们也清楚这就是controller的功能，他所需要的库为libgazebo_ros_diff_drive.so，这是我们安装ros-full时就存在的，这插件也是控制ros的命令能够让gazebo反馈出来。</p>
+<p>接下来我们分析turtlebot</p>
+<p>在turtlebot_description/robots/kobuki_hexagons_kinect.urdf.xacro中</p>
+<pre><code>  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/turtlebot_common_library.urdf.xacro&quot; /&gt;
+  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/kobuki.urdf.xacro&quot; /&gt;
+  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/stacks/hexagons.urdf.xacro&quot;/&gt;
+  &lt;xacro:include filename=&quot;$(find turtlebot_description)/urdf/sensors/kinect.urdf.xacro&quot;/&gt;
+</code></pre>
+<p>引入了4个xacro文件，其中引入了kobuki.urdf.xacro</p>
+<p>在kobuki_description/urdf/kobuki.urdf.xacro中引入了</p>
+<pre><code>  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/common_properties.urdf.xacro&quot;/&gt;
+  &lt;xacro:include filename=&quot;$(find kobuki_description)/urdf/kobuki_gazebo.urdf.xacro&quot;/&gt;
+</code></pre>
+<p>其中kobuki_gazebo就是与gazebo交互的配置文件</p>
+<p>我们找到他的controller</p>
+<pre><code>	  &lt;gazebo&gt;
+	    &lt;plugin name=&quot;kobuki_controller&quot; filename=&quot;libgazebo_ros_kobuki.so&quot;&gt;
+	      &lt;publish_tf&gt;1&lt;/publish_tf&gt;
+	      &lt;left_wheel_joint_name&gt;wheel_left_joint&lt;/left_wheel_joint_name&gt;
+	      &lt;right_wheel_joint_name&gt;wheel_right_joint&lt;/right_wheel_joint_name&gt;
+	      &lt;wheel_separation&gt;.230&lt;/wheel_separation&gt;
+	      &lt;wheel_diameter&gt;0.070&lt;/wheel_diameter&gt;
+	      &lt;torque&gt;1.0&lt;/torque&gt;
+	      &lt;velocity_command_timeout&gt;0.6&lt;/velocity_command_timeout&gt;
+	      &lt;cliff_sensor_left_name&gt;cliff_sensor_left&lt;/cliff_sensor_left_name&gt;
+	      &lt;cliff_sensor_center_name&gt;cliff_sensor_front&lt;/cliff_sensor_center_name&gt;
+	      &lt;cliff_sensor_right_name&gt;cliff_sensor_right&lt;/cliff_sensor_right_name&gt;
+	      &lt;cliff_detection_threshold&gt;0.04&lt;/cliff_detection_threshold&gt;
+	      &lt;bumper_name&gt;bumpers&lt;/bumper_name&gt;
+       	      &lt;imu_name&gt;imu&lt;/imu_name&gt;
+	    &lt;/plugin&gt;
+	  &lt;/gazebo&gt;
+</code></pre>
+<p>发现与turtlebot3不同，他的controller使用的插件为libgazebo_ros_robuki.so</p>
+<h3 id="安装kobuki_gazebo插件">安装kobuki_gazebo插件</h3>
+<p>找到kobuki_gazebo的plugin位置，我一开始以为是插件配置失败，又尝试了很多无用功。我突然想到定位这些库的位置，然后发现</p>
+<pre><code>locate libgazebo_ros_kobuki.so
+</code></pre>
+<p>竟然为空！！！现在结果已经很明确了，因为缺少必要的库，所以无法正常控制turtlebot_gazebo</p>
+<p>在搜索之后，我发现kobuki_gazebo的github为</p>
+<pre><code>https://github.com/yujinrobot/kobuki_desktop
+</code></pre>
+<p>下载完并编译成功，我在自己的catkin_ws下找到了 libgazebo_ros_kobuki.so</p>
+<p>至此</p>
+<pre><code>roslaunch turtlebot_gazebo turtlebot_world.launch
+
+rostopic pub -1 /mobile_base/commands/velocity geometry_msgs/Twist -- '[0.5,0,0]' '[0,0,0]'
+</code></pre>
+<p>已经可以让turtlebot在gazebo中运动起来</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[mbot添加bumper]]></title>
+        <id>https://MineIdea.github.io/post/mbot-tian-jia-bumper/</id>
+        <link href="https://MineIdea.github.io/post/mbot-tian-jia-bumper/">
+        </link>
+        <updated>2020-04-03T08:47:04.000Z</updated>
+        <content type="html"><![CDATA[<p>这里的mbot使用的是古月居课程中创建的mbot，本来也可以用雷达检测碰撞，但是延迟问题我没搞定，看到可以添加bumper来进行碰撞检测，没想到又是一个大坑。</p>
+<p>我的问题是 添加了bumper后，即使机器人已经碰撞，但bumper并未输出碰撞信息，我在gazebo answer找到了相似的问题，但由于是Gazebo 7，而我的环境是Gazebo9，添加_collision已经不起作用，只能通过生成sdf来查看base_link的collison name。</p>
+<p>以下为对我有帮助的网页连接：</p>
+<p>[]: https://answers.ros.org/question/246448/getting-contact-sensorbumper-gazebo-plugin-to-work/<br>
+[]: https://answers.gazebosim.org//question/15095/gazebo-contact-sensor-added-to-a-robot-link-in-urdf-file-is-not-working-as-expected/<br>
+[]: https://blog.csdn.net/wubaobao1993/article/details/91890839</p>
+<p>之后是我的整个操作流程。</p>
+<p>操作都是在mbot_description/urdf/xacro/gazebo目录下进行</p>
+<figure data-type="image" tabindex="1"><img src="https://MineIdea.github.io/post-images/1585903884200.jpg" alt="" loading="lazy"></figure>
+<p>这里我创建一个mbot_with_bumper_gazebo.xacro来测试bumper能否正常使用。</p>
+<p>全部代码为</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;robot name=&quot;arm&quot; xmlns:xacro=&quot;http://www.ros.org/wiki/xacro&quot;&gt;
+    &lt;xacro:include filename=&quot;$(find mbot_description)/urdf/xacro/gazebo/mbot_base_gazebo.xacro&quot; /&gt;
+	
+  &lt;!-- bumper --&gt;
+ 
+  &lt;joint name=&quot;bumper_joint&quot; type=&quot;fixed&quot;&gt;
+    &lt;axis xyz=&quot;0 1 0&quot; /&gt;
+    &lt;origin xyz=&quot;0.05 0 0.02&quot; rpy=&quot;0 0 0&quot;/&gt;
+    &lt;parent link=&quot;base_link&quot;/&gt;
+    &lt;child link=&quot;bump_sensor&quot;/&gt;
+  &lt;/joint&gt;
+ 
+  &lt;link name=&quot;bump_sensor&quot;&gt;
+    &lt;collision name=&quot;bump_sensor_collision&quot;&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;geometry&gt;
+        &lt;box size=&quot;0.05 0.05 0.05&quot;/&gt;
+      &lt;/geometry&gt;
+    &lt;/collision&gt;
+ 
+    &lt;visual&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;geometry&gt;
+         &lt;box size=&quot;0.05 0.05 0.05&quot;/&gt;
+      &lt;/geometry&gt;
+    &lt;/visual&gt;
+ 
+    &lt;inertial&gt;
+      &lt;mass value=&quot;1e-5&quot; /&gt;
+      &lt;origin xyz=&quot;0 0 0&quot; rpy=&quot;0 0 0&quot;/&gt;
+      &lt;inertia ixx=&quot;1e-6&quot; ixy=&quot;0&quot; ixz=&quot;0&quot; iyy=&quot;1e-6&quot; iyz=&quot;0&quot; izz=&quot;1e-6&quot; /&gt;
+    &lt;/inertial&gt;
+  &lt;/link&gt;
+ 
+    &lt;gazebo reference=&quot;bump_sensor&quot;&gt;
+    &lt;sensor name=&quot;main_bumper&quot; type=&quot;contact&quot;&gt;
+        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+	  &lt;plugin name=&quot;gazebo_ros_bumper_controller&quot; filename=&quot;libgazebo_ros_bumper.so&quot;&gt;
+	    &lt;alwaysOn&gt;true&lt;/alwaysOn&gt;
+	    &lt;updateRate&gt;50&lt;/updateRate&gt;
+	    &lt;bumperTopicName&gt;bumper_vals&lt;/bumperTopicName&gt;
+	    &lt;frameName&gt;world&lt;/frameName&gt;
+	  &lt;/plugin&gt;
+    &lt;/sensor&gt;
+    &lt;/gazebo&gt;
+
+    &lt;mbot_base_gazebo/&gt;
+&lt;/robot&gt;
+</code></pre>
+<p>我们在mbot_base_gazebo.xacro中定义了基本的mbot，这里只需要导入并添加bumper即可。</p>
+<p>但此时bumper并不一定能正常工作，原因就是</p>
+<pre><code>        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+</code></pre>
+<p>collison要关联机器人正确的名称，这里我已经通过生成sdf来找到正确名称了。</p>
+<p>接下来是找到名称的步骤：</p>
+<ol>
+<li>rosrun xacro xacro.py -o robot.urdf robot.xacro  //这里的robot.xacro为你的模型名称，在我们这里是mbot_with_bumper_gazebo.xacro</li>
+<li>gz sdf -p robot.urdf  &gt; robot.sdf</li>
+</ol>
+<p>此时目录下已经有robot.sdf文件，我们打开在其中搜索base_link，因为一般机器人主体我们都用base_link来声明。</p>
+<figure data-type="image" tabindex="2"><img src="https://MineIdea.github.io/post-images/1585903817019.jpg" alt="" loading="lazy"></figure>
+<p>可以看到name是一个自动生成的名称，将name复制输入到collision当中</p>
+<pre><code>        &lt;contact&gt;
+            &lt;collision&gt;base_footprint_fixed_joint_lump__base_link_collision&lt;/collision&gt;
+        &lt;/contact&gt;
+</code></pre>
+<p>我们打开mbot launch文件</p>
+<ol>
+<li>rostopic pub -1  /cmd_vel geometry_msgs/Twist -- '[0.1,0,0]' '[0,0,0]'  //让机器人运动起来</li>
+<li>rostopic echo -n 1 bumper_vals</li>
+</ol>
+<p>我们已经可以看到有碰撞信息。</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[turtlebot添加laser]]></title>
         <id>https://MineIdea.github.io/post/turtlebot-tian-jia-laser/</id>
